@@ -75,7 +75,7 @@ protected:
     void setPowerMode(unsigned char pwrMode);
 public:
     
-    char begin(uint8_t ss, SPIClass *spi=&SPI1,  uint8_t irq = 0);
+    bool begin(uint8_t ss, SPIClass *spi,  uint8_t irq = 0);
     
     /*! Writes data into a register. */
     void setRegisterValue(unsigned short registerValue,
@@ -139,5 +139,5 @@ public:
     bool check(void); 
 };
 
-extern ADXL362 adiAccelerometer;
+//extern ADXL362 adiAccelerometer;
 #endif /* __ADXL362_H__ */

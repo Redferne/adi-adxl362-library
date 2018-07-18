@@ -63,7 +63,7 @@ ADXL362::SPI_read(byte  thisRegister, unsigned char* pReadData,
 
     volatile unsigned char *data = pReadData;   // result to return
 
-    _spi->beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE0));
+    _spi->beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
     
     // take the chip select low to select the device:
     digitalWrite(_ss, LOW);
@@ -96,7 +96,7 @@ ADXL362::SPI_write(byte  thisRegister, unsigned char* pData, int bytesToWrite) {
 
     unsigned char* data = pData;
    
-    _spi->beginTransaction(SPISettings(5000000, MSBFIRST, SPI_MODE0)); 
+    _spi->beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
         
     // take the chip select low to select the device:
     digitalWrite(_ss, LOW);  
@@ -150,10 +150,8 @@ bool ADXL362::check(void)
  * @return  0 - the initialization was successful and the device is present;
  *         -1 - an error occurred.
 *******************************************************************************/
-char ADXL362::begin(uint8_t ss, SPIClass *spi,  uint8_t irq)
+bool ADXL362::begin(uint8_t ss, SPIClass *spi,  uint8_t irq)
 {
-    volatile char          status   = -1;
-    
     this->_irq = irq;   
     this->_spi = spi;
     this->_ss = ss;
@@ -167,13 +165,12 @@ char ADXL362::begin(uint8_t ss, SPIClass *spi,  uint8_t irq)
     setRegisterValue(reset, ADXL362_REG_SOFT_RESET, 1);
     delay(10);
       
-    if (check() == false) {
-        return -1;
+    if (!check()) {
+        return false;
     }                    
 
     selectedRange = 2; // Measurement Range: +/- 2g (reset default).
-
-    return status;
+    return true;
 }
 
 /***************************************************************************//**
@@ -541,4 +538,4 @@ void ADXL362::setIntMap1(unsigned char  awakeMap)
     setRegisterValue(awakeMap, ADXL362_REG_INTMAP1, 1);
 }
 
-ADXL362 adiAccelerometer;
+//ADXL362 adiAccelerometer;
